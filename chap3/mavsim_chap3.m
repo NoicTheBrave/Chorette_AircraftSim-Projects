@@ -9,8 +9,8 @@ run('../parameters/simulation_parameters')  % load SIM: simulation parameters
 run('../parameters/aerosonde_parameters')  % load MAV: aircraft parameters
 
 % initialize the mav viewer
-addpath('../chap2'); mav_view = mav_viewer();  
-addpath('../chap2'); data_view = data_viewer();
+addpath('C:/Users/nicpi/Documents/MATLAB/AircraftSim/Assignments_V2/Assignments/chap2'); mav_view = spacecraft_viewer(); %mav_view = mav_viewer();  
+addpath('../chap3/'); data_view = data_viewer();
 
 % initialize the video writer
 VIDEO = 0;  % 1 means write video, 0 means don't write video
@@ -25,18 +25,19 @@ sim_time = SIM.start_time;
 
 % main simulation loop
 disp('Type CTRL-C to exit');
+
 while sim_time < SIM.end_time
     %-------vary forces and moments to check dynamics-------------
-    fx = 10;
-    fy = 0; % 10;
-    fz = 0; % 10;
-    Mx = 0; % 0.1;
+    fx = 10; %10; % North
+    fy = 0; % 10; % East 
+    fz = 0; % 10; % down
+    Mx = 0.1; % 0.1;
     My = 0; % 0.1;
     Mz = 0; % 0.1;
     forces_moments = [fx; fy; fz; Mx; My; Mz];
 
     %-------physical system-------------
-    mav.update(forces_moments, MAV);
+    mav.update_state(forces_moments, MAV);
     
     %-------update viewer-------------
     mav_view.update(mav.true_state);  % plot body of MAV
@@ -48,6 +49,8 @@ while sim_time < SIM.end_time
 
     %-------increment time-------------
     sim_time = sim_time + SIM.ts_simulation;
+
+   
 end
 
 if VIDEO, video.close(); end

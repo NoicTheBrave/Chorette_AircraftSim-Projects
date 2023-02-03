@@ -13,8 +13,8 @@ MAV.Jxz  = 0.120;
 % initial conditions
 MAV.pn0    = 0;     % initial North position
 MAV.pe0    = 0;     % initial East position
-MAV.pd0    = -100;  % initial Down position (negative altitude)
-MAV.u0     = 0;%17;     % initial velocity along body x-axis
+MAV.pd0    = 0; %MAV.pd0    = -100;  % initial Down position (negative altitude)
+MAV.u0     = 0; %0 ;%17;     % initial velocity along body x-axis
 MAV.v0     = 0;     % initial velocity along body y-axis
 MAV.w0     = 0;     % initial velocity along body z-axis
 MAV.phi0   = 0;     % initial roll angle

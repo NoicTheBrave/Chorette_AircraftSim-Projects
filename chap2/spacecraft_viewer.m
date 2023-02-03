@@ -58,6 +58,12 @@ classdef spacecraft_viewer < handle
                 set(self.body_handle,'Vertices',Vertices','Faces',self.Faces);
                 drawnow
             end
+                set(self.body_handle.Parent, 'XLim',[pe-30,pe+30])
+
+                set(self.body_handle.Parent, 'YLim',[pn-30,pn+30])
+
+                set(self.body_handle.Parent, 'ZLim',[-pd-30,-pd+30])
+
         end 
         %---------------------------
         function pts=rotate(self, pts, phi, theta, psi)
@@ -88,28 +94,49 @@ classdef spacecraft_viewer < handle
         function [V, F, colors] = define_spacecraft(self)
             % Define the vertices (physical location of vertices)
             V = [...
-                1    1    0;... % point 1
-                1   -1    0;... % point 2
-                -1   -1    0;... % point 3
-                -1    1    0;... % point 4
-                1    1   -2;... % point 5
-                1   -1   -2;... % point 6
-                -1   -1   -2;... % point 7
-                -1    1   -2;... % point 8
-                1.5  1.5  0;... % point 9
-                1.5 -1.5  0;... % point 10
-                -1.5 -1.5  0;... % point 11
-                -1.5  1.5  0;... % point 12
+                %The "fore" Verticies
+                 2    0    0;...  % point 1
+                 1    1    -1;... % point 2
+                 1    -1   -1;...  % point 3
+                 1    -1    1;...  % point 4
+                 1    1    1;... % point 5
+
+                %The Aft Verticie
+                 -4    0    0;...  % point 6
+
+                %The Wing Verticies
+                 0    3    0;... % -1   -1   -2;... % point 7
+                 -1.5    3   0 ;... % -1    1   -2;... % point 8
+                 -1.5    -3    0;... %1.5  1.5  0;... % point 9 <----UPDATED AS OF 1/30/2023
+                 0    -3      0;... % 1.5 -1.5  0;... % point 10
+
+                %The Horizontal Stabilizer Verticies
+                 -3    1.5    0;... % -1.5 -1.5  0;... % point 11
+                 -4    1.5    0;... % -1.5  1.5  0;... % point 12
+                -4    -1.5    0;...% point 13
+                -3    -1.5    0;...% point 14
+
+                %The Vertical Stabilizer Verticies
+                -3    0    0;...% point 15
+                -4    0    -1.5;... % point 16
             ]';
 
             % define faces as a list of vertices numbered above
             F = [...
-                    1, 2,  6,  5;...  % front
-                    4, 3,  7,  8;...  % back
-                    1, 5,  8,  4;...  % right 
-                    2, 6,  7,  3;...  % left
-                    5, 6,  7,  8;...  % top
-                    9, 10, 11, 12;... % bottom
+                    1, 2, 3, NaN;... % 1
+                    1, 3, 4, NaN;... % 2
+                    1, 5, 4, NaN;... % 3
+                    1, 2, 5, NaN;... % 4
+                    
+                    3, 4, 6, NaN;... % 5
+                    5, 4, 6, NaN;... % 6
+                    2, 5, 6, NaN;... % 7
+                    2, 3, 6, NaN;... % 8
+
+                    7, 8, 9, 10;... %9 <----UPDATED AS OF 1/30/2023
+                    11, 12, 13, 14;... %10
+                    6, 15, 16, NaN;... %11
+
                     ];
 
             % define colors for each face    
@@ -120,12 +147,23 @@ classdef spacecraft_viewer < handle
             mycyan = [0, 1, 1];
 
             colors = [...
-                myyellow;... % front
-                myblue;...   % back
-                myblue;...   % right
-                myblue;...   % left
-                myblue;...   % top
-                mygreen;...  % bottom
+                myyellow;... % noes_1
+                myblue;...   % noes_2
+                myred;...   % noes_3
+                mycyan;...   % noes_4
+
+                myyellow;... % body_1
+                myblue;...   % body_2
+                myred;...%myblue;...   % body_3
+                mycyan;...%myblue;...   % body_4
+
+                myyellow;... % Wing_1
+                myblue;...   % Wing_2
+                myred;...%myblue;...   % Wing_3
+
+
+                %myblue;...   % top
+                %mygreen;...  % bottom
                 ];
         end
     end
