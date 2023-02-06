@@ -9,7 +9,8 @@ run('../parameters/simulation_parameters')  % load SIM: simulation parameters
 run('../parameters/aerosonde_parameters')  % load MAV: aircraft parameters
 
 % initialize the mav viewer
-addpath('C:/Users/nicpi/Documents/MATLAB/AircraftSim/Assignments_V2/Assignments/chap2'); mav_view = spacecraft_viewer(); %mav_view = mav_viewer();  
+%This should now have a relative file path for ch. 2 things 
+addpath('.../chap2/'); mav_view = spacecraft_viewer(); %mav_view = mav_viewer();   
 addpath('../chap3/'); data_view = data_viewer();
 
 % initialize the video writer
