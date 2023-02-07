@@ -43,8 +43,8 @@ classdef mav_dynamics < handle
         %[phi, theta, psi] = Quaternion2Euler(self.state(7:10)); %PLEASE WORKD 
         
         function xdot = derivatives(self, state, forces_moments, MAV)
-            pe    = state(1);
-            pn    = state(2);
+            pn    = state(1);
+            pe    = state(2);
             pd    = state(3);
             u     = state(4);
             v     = state(5);
@@ -82,10 +82,10 @@ classdef mav_dynamics < handle
     
 
             % position dynamics
-            u_dot = r*v - q*w + 1/MAV.mass*fx;
+            u_dot = r*v - q*w + (1/MAV.mass)*fx;
     
-            v_dot = p*w - r*u + 1/MAV.mass*fy;
-            w_dot = q*u - p*v + 1/MAV.mass*fz;
+            v_dot = p*w - r*u + (1/MAV.mass)*fy;
+            w_dot = q*u - p*v + (1/MAV.mass)*fz;
             
 
             

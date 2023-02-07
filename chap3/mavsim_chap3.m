@@ -10,7 +10,7 @@ run('../parameters/aerosonde_parameters')  % load MAV: aircraft parameters
 
 % initialize the mav viewer
 %This should now have a relative file path for ch. 2 things 
-addpath('.../chap2/'); mav_view = spacecraft_viewer(); %mav_view = mav_viewer();   
+addpath('../chap2/'); mav_view = spacecraft_viewer();%mav_viewer(); %spacecraft_viewer();%mav_viewer();%spacecraft_viewer(); %mav_view = mav_viewer();   
 addpath('../chap3/'); data_view = data_viewer();
 
 % initialize the video writer
@@ -32,9 +32,9 @@ while sim_time < SIM.end_time
     fx = 0; %10; % North
     fy = 0; % 10; % East 
     fz = 0; % 10; % down
-    Mx = 0.1; % 0.1;
-    My = 0; % 0.1;
-    Mz = 0; % 0.1;
+    Mx = 10; % 0.1;
+    My = 1; % 0.1;
+    Mz = 1; % 0.1;
     forces_moments = [fx; fy; fz; Mx; My; Mz];
 
     %-------physical system-------------
