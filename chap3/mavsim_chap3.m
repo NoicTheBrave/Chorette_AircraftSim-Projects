@@ -29,10 +29,10 @@ disp('Type CTRL-C to exit');
 
 while sim_time < SIM.end_time
     %-------vary forces and moments to check dynamics-------------
-    fx = 0; %10; % North
+    fx = 1; %10; % North
     fy = 0; % 10; % East 
     fz = 0; % 10; % down
-    Mx = 10; % 0.1;
+    Mx = 1; % 0.1;
     My = 1; % 0.1;
     Mz = 1; % 0.1;
     forces_moments = [fx; fy; fz; Mx; My; Mz];
