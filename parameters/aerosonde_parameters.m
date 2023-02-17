@@ -13,10 +13,10 @@ MAV.Jxz  = 0.120;
 % initial conditions
 MAV.pn0    = 0;     % initial North position
 MAV.pe0    = 0;     % initial East position
-MAV.pd0    = 0; %MAV.pd0    = -100;  % initial Down position (negative altitude)
-MAV.u0     = 0; %0 ;%17;     % initial velocity along body x-axis
+MAV.pd0    = -100;  % initial Down position (negative altitude)
+MAV.u0     = 17;%17;     % initial velocity along body x-axis
 MAV.v0     = 0;     % initial velocity along body y-axis
-MAV.w0     = 0;     % initial velocity along body z-axis
+MAV.w0     = 1;     % initial velocity along body z-axis
 MAV.phi0   = 0;     % initial roll angle
 MAV.theta0 = 0;     % initial pitch angle
 MAV.psi0   = 0;     % initial yaw angle
@@ -115,6 +115,3 @@ MAV.C_Q0 = 0.005230;
 MAV.C_T2 = -0.1079;
 MAV.C_T1 = -0.06044;
 MAV.C_T0 = 0.09357;
-
-
-
