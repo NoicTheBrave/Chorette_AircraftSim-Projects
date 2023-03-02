@@ -18,6 +18,10 @@ classdef mav_viewer < handle
             [self.Vertices, self.Faces, self.facecolors] = self.define_MAV();
             self.plot_initialized = 0;           
         end
+        function self=set_view(self, azmuth, elevation)
+            figure(1);
+            view(azmuth, elevation)
+        end
         %---------------------------
         function self=update(self, state)
             if self.plot_initialized==0
@@ -29,7 +33,7 @@ classdef mav_viewer < handle
                 ylabel('North')
                 zlabel('-Down')
                 view(32,47)  % set the vieew angle for figure
-                axis([-10,10,-10,10,-10,10]);
+                %axis([-10,10,-10,10,-10,10]);
                 hold on
                 grid on
                 self.plot_initialized = 1;
@@ -54,6 +58,9 @@ classdef mav_viewer < handle
                 self.body_handle = patch('Vertices', Vertices', 'Faces', self.Faces,...
                                              'FaceVertexCData',self.facecolors,...
                                              'FaceColor','flat');
+                set(self.body_handle.Parent, 'XLim',[pe-10,pe+10])
+                set(self.body_handle.Parent, 'YLim',[pn-10,pn+10])
+                set(self.body_handle.Parent, 'ZLim',[-pd-10,-pd+10])
             else
                 set(self.body_handle,'Vertices',Vertices','Faces',self.Faces);
                 set(self.body_handle.Parent, 'XLim',[pe-10,pe+10])
@@ -105,7 +112,7 @@ classdef mav_viewer < handle
             tailwing_l = 60;
             
             V = [...
-                fuse_l1+wing_l/2 0 fuse_h/3;...%1
+                fuse_l1+wing_l/2 0 0;...%1
                 wing_l/2+fuse_l2 fuse_w/2 fuse_h/2;...%2
                 wing_l/2+fuse_l2 -fuse_w/2 fuse_h/2;...%3
                 wing_l/2+fuse_l2 -fuse_w/2 -fuse_h/2;...%4

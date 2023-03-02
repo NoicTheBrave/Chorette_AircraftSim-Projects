@@ -15,7 +15,7 @@ classdef data_viewer < handle
     	phi_handle
     	theta_handle
         psi_handle
-        Vg_handle
+        gamma_handle
     	chi_handle
     	p_handle
     	q_handle
@@ -43,7 +43,7 @@ classdef data_viewer < handle
             self.phi_handle = [];
             self.theta_handle = [];
             self.psi_handle = [];
-            self.Vg_handle = [];
+            self.gamma_handle = [];
             self.chi_handle = [];
             self.p_handle = [];
             self.q_handle = [];
@@ -78,7 +78,7 @@ classdef data_viewer < handle
                     self.pe_handle = self.graph_y_yhat(self.time, true.pe, estimated.pe, [], 'p_e');
                 subplot(4,4,6)
                     hold on
-                    self.alpha_handle = self.graph_y_yhat(self.time, true.alpha, estimated.alpha, [], '\alpha');
+                    self.alpha_handle = self.graph_y_yhat(self.time, rad2deg(true.alpha), rad2deg(estimated.alpha), [], '\alpha ^o');
                 subplot(4,4,7)
                     hold on
                     self.theta_handle = self.graph_y_yhat_yd(self.time, true.theta, estimated.theta, commanded.theta, [], '\theta');
@@ -102,15 +102,15 @@ classdef data_viewer < handle
                     self.wn_handle = self.graph_y_yhat(self.time, true.wn, estimated.wn, [], 'wind-n');
                 subplot(4,4,14)
                     hold on
-                    self.Vg_handle = self.graph_y_yhat(self.time, true.Vg, estimated.Vg, [], 'V_g');
+                    self.gamma_handle = self.graph_y_yhat(self.time, rad2deg(true.gamma), rad2deg(estimated.gamma), [], '\gamma ^o');
                 subplot(4,4,15)
                     hold on
                     self.chi_handle = self.graph_y_yhat_yd(self.time, true.chi, estimated.chi, commanded.chi, [], '\chi');
                 subplot(4,4,16)
                     hold on
-                    self.bx_handle = self.graph_y_yhat(self.time, true.bx, estimated.bx, [], 'Bias');
-                    self.by_handle = self.graph_y_yhat(self.time, true.by, estimated.by, [], []);
-                    self.bz_handle = self.graph_y_yhat(self.time, true.bz, estimated.bz, [], []);
+                    self.bx_handle = self.graph_y_yhat(self.time, true.bx, estimated.bx, [], '\delta_e');
+                    self.by_handle = self.graph_y_yhat(self.time, true.by, estimated.by, [], '\delta_t');
+                    self.bz_handle = self.graph_y_yhat(self.time, true.bz, estimated.bz, [], '\delta_a');
                 self.plot_initialized = 1;
             else
                 if self.time >= self.time_last_plot + self.plot_rate
@@ -119,9 +119,9 @@ classdef data_viewer < handle
                     self.graph_y_yhat_yd(self.time, true.h, estimated.h, commanded.h, self.h_handle);
                     self.graph_y_yhat(self.time, true.wn, estimated.wn, self.wn_handle);
                     self.graph_y_yhat_yd(self.time, true.Va, estimated.Va, commanded.Va, self.Va_handle);
-                    self.graph_y_yhat(self.time, true.alpha, estimated.alpha, self.alpha_handle);
+                    self.graph_y_yhat(self.time, rad2deg(true.alpha), rad2deg(estimated.alpha), self.alpha_handle);
                     self.graph_y_yhat(self.time, true.beta, estimated.beta, self.beta_handle);
-                    self.graph_y_yhat(self.time, true.Vg, estimated.Vg, self.Vg_handle);
+                    self.graph_y_yhat(self.time, rad2deg(true.gamma), rad2deg(estimated.gamma), self.gamma_handle);
                     self.graph_y_yhat_yd(self.time, true.phi, estimated.phi, commanded.phi, self.phi_handle);
                     self.graph_y_yhat_yd(self.time, true.theta, estimated.theta, commanded.theta, self.theta_handle);
                     self.graph_y_yhat(self.time, true.psi, estimated.psi, self.psi_handle);

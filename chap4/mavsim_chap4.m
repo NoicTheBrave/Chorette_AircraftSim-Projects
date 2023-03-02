@@ -39,7 +39,7 @@ while sim_time < SIM.end_time
 
     %-------physical system-------------
     current_wind = wind.update();
-    mav.update_state(delta, current_wind, MAV);
+    mav.update_state(delta, current_wind, MAV, "long");
     
     %-------update viewer-------------
     mav_view.update(mav.true_state);  % plot body of MAV
