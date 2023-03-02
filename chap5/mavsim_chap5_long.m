@@ -4,6 +4,7 @@
 %     - Update history:  
 %         2/5/2019 - RWB
 %         2/27/2023 - LRH Heavily Modified for longitudinal only
+        %3/1/2023 - NIC Doesnt know what the hell he is doing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear
 clc
@@ -31,8 +32,8 @@ mav = mav_dynamics(SIM.ts_simulation, MAV);
 % compute longitudinal trim
 addpath('../chap5');
 
-Va = 0;  %TODO set your desired Va speed
-gamma = 0;  %TODO set your desired gamma speed in radians
+Va = 20;  %TODO set your desired Va speed
+gamma = deg2rad(12);  %TODO set your desired gamma speed in radians
 
 %Setup trim class with desired trim conditions
 trim = compute_long_trim(Va, gamma, mav, MAV);
