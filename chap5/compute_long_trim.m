@@ -35,10 +35,7 @@ classdef compute_long_trim < handle
             m = f_and_m(5);
 
             norm_long_forces = norm([f_x, f_z, m]);
-            %f_out(1) = f_and_m(1);
-            %f_out(2) = f_and_m(3);
-            %f_out(3) = f_and_m(5);
-            %norm_long_forces = norm(f_out);
+
             
 
             %TODO figure out how to set the longitudinal conditions
