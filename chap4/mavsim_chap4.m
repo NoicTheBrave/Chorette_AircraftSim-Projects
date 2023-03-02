@@ -13,7 +13,7 @@ run('../parameters/simulation_parameters')  % load SIM: simulation parameters
 run('../parameters/aerosonde_parameters')  % load MAV: aircraft parameters
 
 % initialize the mav viewer
-mav_view = spacecraft_viewer();%mav_viewer();  
+mav_view = mav_viewer();  
 data_view = data_viewer();
 
 % initialize the video writer

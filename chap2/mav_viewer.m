@@ -1,6 +1,6 @@
-classdef spacecraft_viewer < handle
+classdef mav_viewer < handle
     %
-    %    Create spacecraft animation
+    %    Create Aircraft animation
     %
     %--------------------------------
     properties
@@ -13,9 +13,9 @@ classdef spacecraft_viewer < handle
     %--------------------------------
     methods
         %------constructor-----------
-        function self = spacecraft_viewer
+        function self = mav_viewer
             self.body_handle = [];
-            [self.Vertices, self.Faces, self.facecolors] = self.define_spacecraft();
+            [self.Vertices, self.Faces, self.facecolors] = self.define_MAV();
             self.plot_initialized = 0;           
         end
         %---------------------------
@@ -24,7 +24,7 @@ classdef spacecraft_viewer < handle
                 figure(1); clf;
                 self=self.drawBody(state.pn, state.pe, -state.h,...
                                    state.phi, state.theta, state.psi);
-                title('Spacecraft')
+                title('MAV')
                 xlabel('East')
                 ylabel('North')
                 zlabel('-Down')
@@ -56,6 +56,10 @@ classdef spacecraft_viewer < handle
                                              'FaceColor','flat');
             else
                 set(self.body_handle,'Vertices',Vertices','Faces',self.Faces);
+                set(self.body_handle.Parent, 'XLim',[pe-10,pe+10])
+                set(self.body_handle.Parent, 'YLim',[pn-10,pn+10])
+                set(self.body_handle.Parent, 'ZLim',[-pd-10,-pd+10])
+                hold on
                 drawnow
             end
         end 
@@ -85,32 +89,54 @@ classdef spacecraft_viewer < handle
             pts = pts + repmat([pn;pe;pd],1,size(pts,2));
         end
         %---------------------------
-        function [V, F, colors] = define_spacecraft(self)
-            % Define the vertices (physical location of vertices)
+        function [V, F, colors] = define_MAV(self)
+            %parameters for drawing aircraft
+            size = .01;% scale size
+            %vertices
+            fuse_l1 = 140;
+            fuse_l2 = 80;
+            fuse_l3 = 300;
+            fuse_w  = 40;
+            fuse_h  = 40;
+            wing_l  = 120;
+            wing_w  = 400;
+            tail_h  = 80;
+            tailwing_w = 200;
+            tailwing_l = 60;
+            
             V = [...
-                1    1    0;... % point 1
-                1   -1    0;... % point 2
-                -1   -1    0;... % point 3
-                -1    1    0;... % point 4
-                1    1   -2;... % point 5
-                1   -1   -2;... % point 6
-                -1   -1   -2;... % point 7
-                -1    1   -2;... % point 8
-                1.5  1.5  0;... % point 9
-                1.5 -1.5  0;... % point 10
-                -1.5 -1.5  0;... % point 11
-                -1.5  1.5  0;... % point 12
-            ]';
+                fuse_l1+wing_l/2 0 fuse_h/3;...%1
+                wing_l/2+fuse_l2 fuse_w/2 fuse_h/2;...%2
+                wing_l/2+fuse_l2 -fuse_w/2 fuse_h/2;...%3
+                wing_l/2+fuse_l2 -fuse_w/2 -fuse_h/2;...%4
+                wing_l/2+fuse_l2 fuse_w/2 -fuse_h/2;...%5
+                wing_l/2-fuse_l3 0 0;...%6
+                wing_l/2 wing_w/2 0;...%7
+                -wing_l/2 wing_w/2 0;...%8
+                -wing_l/2 -wing_w/2 0;...%9
+                wing_l/2 -wing_w/2 0;...%10
+                wing_l/2-fuse_l3+tailwing_l tailwing_w/2 0;...%11
+                wing_l/2-fuse_l3 tailwing_w/2 0;...%12
+                wing_l/2-fuse_l3 -tailwing_w/2 0;...%13
+                wing_l/2-fuse_l3+tailwing_l -tailwing_w/2 0;...%14
+                wing_l/2-fuse_l3+tailwing_l 0 0;...%15
+                wing_l/2-fuse_l3 0 -tail_h]';%16
 
-            % define faces as a list of vertices numbered above
             F = [...
-                    1, 2,  6,  5;...  % front
-                    4, 3,  7,  8;...  % back
-                    1, 5,  8,  4;...  % right 
-                    2, 6,  7,  3;...  % left
-                    5, 6,  7,  8;...  % top
-                    9, 10, 11, 12;... % bottom
-                    ];
+                %fuse
+                1 2 3 1;...%nose-up
+                1 3 4 1;...%nose-east
+                1 2 5 1;...%nose-west
+                1 4 5 1;...%nose-down
+                2 3 6 2;...%top
+                3 4 6 3;...%left side
+                4 5 6 4;...%bottom
+                2 5 6 2;...%right side
+                %wing
+                7 8 9 10;...
+                %rear Stab. & tail
+                11 12 13 14;...%rear stab.
+                15 16 6 15];%tail  
 
             % define colors for each face    
             myred = [1, 0, 0];
@@ -118,15 +144,20 @@ classdef spacecraft_viewer < handle
             myblue = [0, 0, 1];
             myyellow = [1, 1, 0];
             mycyan = [0, 1, 1];
-
+            
             colors = [...
-                myyellow;... % front
-                myblue;...   % back
-                myblue;...   % right
-                myblue;...   % left
-                myblue;...   % top
-                mygreen;...  % bottom
-                ];
+                myred;...%nose-up
+                myred;...%nose-east
+                myred;...%nose-west
+                myred;...%nose-down
+                mycyan;...%top
+                mycyan;...%left side
+                mycyan;...%bottom
+                mycyan;...%right side
+                myblue;...%wing
+                myyellow;...%rear stab.
+                myyellow];%tail
+            V = size*V;   % rescale vertices
         end
     end
 end
