@@ -33,15 +33,15 @@ mav = mav_dynamics(SIM.ts_simulation, MAV);
 addpath('../chap5');
 
 Va = 20;  %TODO set your desired Va speed
-gamma = deg2rad(12);  %TODO set your desired gamma speed in radians
+gamma = 0; %deg2rad(12);  %TODO set your desired gamma speed in radians
 
 %Setup trim class with desired trim conditions
 trim = compute_long_trim(Va, gamma, mav, MAV);
 
 %Guess input conditions
-delta_e_0 = 0;  %TODO guess your trimmed delta_e
-delta_t_0 = 0;   %TODO guess your trimmed delta_t
-alpha_0 = 0; %TODO guess your trimmed alpha
+delta_e_0 = -0.2;  %TODO guess your trimmed delta_e - Elevator - (small neg) (between -1 -> 0 (for this project)
+delta_t_0 = 0.7;   %TODO guess your trimmed delta_t - Thrust - (between 0 & 1, mucho FORCE <3) 
+alpha_0 = deg2rad(2.0); %0; %TODO guess your trimmed alpha - Alpha - pitch angle (pos? :P ) 
 
 x = [alpha_0, delta_e_0, delta_t_0];
 
@@ -50,10 +50,10 @@ A = [];
 b = [];
 Aeq = [];
 beq = [];
-lb = [deg2rad(-5), -1, 0];
-ub = [deg2rad(20), 1, 1];
+lb = [deg2rad(-5), -1, 0]; %lower bound
+ub = [deg2rad(20), 1, 1]; % upper bound 
 x0 = [alpha_0, delta_e_0, delta_t_0];
-x = fmincon(@trim.compute_long_forces, x0, A, b, Aeq, beq, lb, ub);
+x = fmincon(@trim.compute_long_forces, x0, A, b, Aeq, beq, lb, ub); % literally magic <3 
 
 out = trim.compute_long_forces(x)
 mav.set_longitudinal(Va, gamma, x(1));
