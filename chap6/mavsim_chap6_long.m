@@ -68,7 +68,7 @@ ctrl.set_ap_modes('p', 'gamma'); %ctrl.set_ap_modes('p', 'alt')%ctrl.set_ap_mode
 p_command = signals(deg2rad(5), pi, 1, 0);
 q_command = signals(deg2rad(10), pi/2, 1, 0);
 gamma_command = signals(deg2rad(5), pi, 1, 0);
-Va_command = 20;
+Va_command = 20; % was 20
 
 % initialize the simulation time
 sim_time = SIM.start_time;

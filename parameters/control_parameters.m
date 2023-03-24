@@ -11,7 +11,7 @@
 % AP stands for autopilot
 AP.gravity = 0;
 AP.sigma = 0;
-AP.Va0 = 0;
+AP.Va0 = 0;%0; %------------IMMA JUST BOOST THIS (so it stopd dipping down for the gamma... to like 28... not sure why it likes 28-30... -_-
 
 %----------roll rate loop-------------
 AP.p_kp = 0; %was 0
@@ -38,8 +38,9 @@ AP.q_kp = -3.5; %-4.6;%-3.5;
 AP.q_ki = .0001; % -.1;
 AP.q_kd = 0;
 
-%----------flight path angle loop-------------
-AP.gamma_kp = 0.1; %was 0
+%----------flight path angle loop-------------%<--------THIS IS WHAT YOU
+%NEED TO MODIFY FOR THE GAMMA COMMAND CH6 STUFF
+AP.gamma_kp = 5; %was 0
 AP.gamma_ki = 0;
 AP.gamma_kd = 0;
 
