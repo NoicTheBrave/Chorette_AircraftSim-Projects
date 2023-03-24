@@ -64,7 +64,7 @@ delta = [x(2), x(3), 0, 0];
 
 % arguments to signals are amplitude, frequency, start_time, dc_offset
 ctrl.set_trim_delta(delta);
-ctrl.set_ap_modes('p', 'q'); %ctrl.set_ap_modes('p', 'q');
+ctrl.set_ap_modes('p', 'gamma'); %ctrl.set_ap_modes('p', 'alt')%ctrl.set_ap_modes('p', 'gamma'); %ctrl.set_ap_modes('p', 'q'); %------------THIS TOGGLES WHAT FLIGHT CONTROLLER U ARE USING FOR THIS!!! 
 p_command = signals(deg2rad(5), pi, 1, 0);
 q_command = signals(deg2rad(10), pi/2, 1, 0);
 gamma_command = signals(deg2rad(5), pi, 1, 0);
@@ -79,9 +79,9 @@ while sim_time < SIM.end_time
 
     %-------controller-------------
     estimated_state = mav.true_state;  % uses true states in the control
-    commands.p_command = p_command.square(sim_time);
-    commands.q_command = q_command.square(sim_time);
-    %commands.gamma_command = gamma_command.square(sim_time);
+    commands.p_command = p_command.square(sim_time);%square(sim_time);
+    commands.q_command = q_command.sinusoid(sim_time); %q_command.square(sim_time); <-----------Changed as hook recommended
+    commands.gamma_command = gamma_command.sinusoid(sim_time); %square(sim_time); %<-------UNCOMMENTED, probably why my gamma was NOT changing...
     commands.airspeed_command = Va_command;
     [delta, commanded_state] = ctrl.update(commands, estimated_state);
 

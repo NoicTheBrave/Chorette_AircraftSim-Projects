@@ -14,7 +14,7 @@ AP.sigma = 0;
 AP.Va0 = 0;
 
 %----------roll rate loop-------------
-AP.p_kp = 0;
+AP.p_kp = 0; %was 0
 AP.p_ki = 0;
 AP.p_kd = 0;
 
@@ -34,12 +34,12 @@ AP.beta_ki = 0;
 AP.beta_kd = 0;
 
 %----------pitch rate loop-------------
-AP.q_kp = -4.6;%-3.5;
-AP.q_ki = .0001% -.1;
+AP.q_kp = -3.5; %-4.6;%-3.5;
+AP.q_ki = .0001; % -.1;
 AP.q_kd = 0;
 
 %----------flight path angle loop-------------
-AP.gamma_kp = 1;
+AP.gamma_kp = 0.1; %was 0
 AP.gamma_ki = 0;
 AP.gamma_kd = 0;
 
