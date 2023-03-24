@@ -64,7 +64,7 @@ delta = [x(2), x(3), 0, 0];
 
 % arguments to signals are amplitude, frequency, start_time, dc_offset
 ctrl.set_trim_delta(delta);
-ctrl.set_ap_modes('p', 'gamma'); %ctrl.set_ap_modes('p', 'alt')%ctrl.set_ap_modes('p', 'gamma'); %ctrl.set_ap_modes('p', 'q'); %------------THIS TOGGLES WHAT FLIGHT CONTROLLER U ARE USING FOR THIS!!! 
+ctrl.set_ap_modes('p', 'alt'); %ctrl.set_ap_modes('p', 'alt')%ctrl.set_ap_modes('p', 'gamma'); %ctrl.set_ap_modes('p', 'q'); %------------THIS TOGGLES WHAT FLIGHT CONTROLLER U ARE USING FOR THIS!!! 
 p_command = signals(deg2rad(5), pi, 1, 0);
 q_command = signals(deg2rad(10), pi/2, 1, 0);
 gamma_command = signals(deg2rad(5), pi, 1, 0);
