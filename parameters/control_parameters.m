@@ -4,36 +4,51 @@
 %     - Beard & McLain, PUP, 2012
 %     - Last updated:  
 %         2/13/2019 - RWB
-addpath('../chap5')
-load transfer_function_coef
+%         3/01/2023 - LRH Modified heavily
+%addpath('../chap5')
+%load transfer_function_coef
 
 % AP stands for autopilot
-AP.gravity = 
-AP.sigma = 
-AP.Va0 = 
+AP.gravity = 0;
+AP.sigma = 0;
+AP.Va0 = 0;
+
+%----------roll rate loop-------------
+AP.p_kp = 0;
+AP.p_ki = 0;
+AP.p_kd = 0;
 
 %----------roll loop-------------
-AP.roll_kp = 
-AP.roll_kd = 
+AP.phi_kp = 0;
+AP.phi_ki = 0;
+AP.phi_kd = 0;
 
 %----------course loop-------------
-AP.course_kp = 
-AP.course_ki = 
+AP.chi_kp = 0;
+AP.chi_ki = 0;
+AP.chi_kd = 0;
 
 %----------sideslip loop-------------
-AP.sideslip_ki = 
-AP.sideslip_kp = 
+AP.beta_kp = 0;
+AP.beta_ki = 0;
+AP.beta_kd = 0;
 
-%----------pitch loop-------------
-AP.pitch_kp = 
-AP.pitch_kd = 
-K_theta_DC = 
+%----------pitch rate loop-------------
+AP.q_kp = -4.6;%-3.5;
+AP.q_ki = .0001% -.1;
+AP.q_kd = 0;
+
+%----------flight path angle loop-------------
+AP.gamma_kp = 1;
+AP.gamma_ki = 0;
+AP.gamma_kd = 0;
 
 %----------altitude loop-------------
-AP.altitude_kp = 
-AP.altitude_ki = 
-AP.altitude_zone = 
+AP.h_kp = 0;
+AP.h_ki = 0;
+AP.h_kd = 0;
 
-%---------airspeed hold using throttle---------------
-AP.airspeed_throttle_kp = 
-AP.airspeed_throttle_ki = 
+%---------airspeed loop---------------
+AP.Va_kp = 1;
+AP.Va_ki = .01;
+AP.Va_kd = -0.01;

@@ -28,18 +28,14 @@ classdef autopilot < handle
              % load AP: control gains/parameters
             run('../parameters/control_parameters') 
             addpath('../chap6')
-            self.ts_control = ts_control;  %------------- I just put () on the end of this thing... 
-            
+            self.ts_control = ts_control;
             self.rollrate_aileron = 0;
             self.rollangle_rollrate = 0;
             self.courseangle_rollangle = 0;
             self.sideslip_rudder = 0;
-            
             self.pitchrate_elevator = pid_control(AP.q_kp, AP.q_ki, AP.q_kd, self.ts_control, -1, 1);
             self.gamma_pitchrate = pid_control(AP.gamma_kp, AP.gamma_ki, AP.gamma_kd, self.ts_control, rad2deg(-20), rad2deg(20));
-            
-            self.alt_gamma = 0; %<-------------this is what we need to be playing with inorder to get the right movements 
-            
+            self.alt_gamma = 0;
             self.Va_throttle = pid_control(AP.Va_kp, AP.Va_ki, AP.Va_kd, self.ts_control, 0, 1);
             addpath('../message_types'); 
             self.commanded_state = msg_state();
@@ -69,14 +65,14 @@ classdef autopilot < handle
             
             % lateral autopilot
             % longitudinal autopilot
-            if(strcmp(self.horizontal_ap_state,'p')) %self.horizontal_ap_state == 'p')
+            if(self.horizontal_ap_state == 'p')
                 p_c = cmd.p_command;
                 self.commanded_state.p = cmd.p_command;
                 self.commanded_state.phi = 0;
                 self.commanded_state.chi = 0;
                 delta_a = 0;
           
-            elseif(strcmp(self.vertical_ap_state,'phi'))%elseif(self.horizontal_ap_state == 'phi')
+            elseif(self.horizontal_ap_state == 'phi')
                 phi_c = cmd.phi_command;
                 self.commanded_state.phi = cmd.phi_command;
                 self.commanded_state.chi = 0;
@@ -84,7 +80,7 @@ classdef autopilot < handle
                 self.commanded_state.p = p_c;
                 delta_a = 0;
                 
-            elseif(strcmp(self.horizontal_ap_state, 'chi')) %elseif(self.horizontal_ap_state == 'chi')
+            elseif(self.horizontal_ap_state == 'chi')
                 chi_c = cmd.altitude_command;
                 self.commanded_state.chi = cmd.chi_command;
                 phi_c =0;
