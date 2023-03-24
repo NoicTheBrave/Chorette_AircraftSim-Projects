@@ -41,7 +41,7 @@ AP.q_kd = 0;
 %----------flight path angle loop-------------%<--------THIS IS WHAT YOU
 %NEED TO MODIFY FOR THE GAMMA COMMAND CH6 STUFF
 AP.gamma_kp = 0; %was 0
-AP.gamma_ki = 0;
+AP.gamma_ki = 2;
 AP.gamma_kd = 1;
 
 %----------altitude loop-------------
