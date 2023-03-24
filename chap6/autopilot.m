@@ -38,9 +38,7 @@ classdef autopilot < handle
             
             self.pitchrate_elevator = pid_control(AP.q_kp, AP.q_ki, AP.q_kd, self.ts_control, -1, 1);
             self.gamma_pitchrate = pid_control(AP.gamma_kp, AP.gamma_ki, AP.gamma_kd, self.ts_control, rad2deg(-20), rad2deg(20));
-            
-            self.alt_gamma = 0; %0; %<-------------this is what we need to be playing with inorder to get the right movements 
-            
+            self.alt_gamma = pid_control(AP.h_kp, AP.h_ki, AP.h_kd, self.ts_control, rad2deg(-10), rad2deg(20));%0; %0; %<-------------this is what we need to be playing with inorder to get the right movements 
             self.Va_throttle = pid_control(AP.Va_kp, AP.Va_ki, AP.Va_kd, self.ts_control, 0, 1);
             addpath('../message_types'); 
             self.commanded_state = msg_state();
@@ -99,10 +97,10 @@ classdef autopilot < handle
            %--------Disabled due to an error... for the command ment for
            %error handling... (nice one!)
 
-           % else
-           %     ME = MException('Incorrect State', ...
-           %         'State %s not included in the possible lateral autopilot modes',self.vertical_ap_state);
-           %     throw(ME)
+            else
+                ME = MException('Incorrect State', ...
+                    'State %s not included in the possible lateral autopilot modes',self.vertical_ap_state);
+                throw(ME)
             end
 
             self.commanded_state.beta = 0;
@@ -115,14 +113,14 @@ classdef autopilot < handle
                 self.commanded_state.gamma = 0;
                 self.commanded_state.h = 0;
                 delta_e = self.pitchrate_elevator.update(q_c, state.q);
-                %delta_e_add = self.pitchrate_elevator.update_with_no_rate(p_c, state.p);
-                %delta_e = self.saturate(self.trim_delta(1) + delta_e_add, -1, 1);
+                %delta_e_add = self.pitchrate_elevator.update_with_no_rate(p_c, state.p); %--------------------------
+                %delta_e = self.saturate(self.trim_delta(1) + delta_e_add, -1, 1);%%--------------------------
           
             elseif(strcmp(self.vertical_ap_state,'gamma'))%self.vertical_ap_state == 'gamma')
                 gamma_c = cmd.gamma_command;
                 self.commanded_state.gamma = cmd.gamma_command;
                 self.commanded_state.h = 0;
-                q_c = self.pitchrate_elevator.update(gamma_c, state.gamma);
+                q_c = self.gamma_pitchrate.update(gamma_c, state.gamma);%q_c = self.pitchrate_elevator.update(gamma_c, state.gamma);
                 self.commanded_state.q = q_c;
                 delta_e = self.pitchrate_elevator.update(q_c, state.q);
                 
@@ -138,10 +136,10 @@ classdef autopilot < handle
             %--------Disabled due to an error... for the command ment for
            %error handling... (nice one!)
 
-           % else
-           %     ME = MException('Incorrect State', ...
-           %         'State %s not included in the possible longitudinal autopilot modes',self.vertical_ap_state);
-           %     throw(ME)
+            else
+                ME = MException('Incorrect State', ...
+                    'State %s not included in the possible longitudinal autopilot modes',self.vertical_ap_state);
+                throw(ME)
             end
 
             Va_c = cmd.airspeed_command;

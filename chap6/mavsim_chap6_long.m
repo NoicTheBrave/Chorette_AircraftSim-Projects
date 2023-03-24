@@ -36,7 +36,7 @@ addpath('../tools');
 
 % compute longitudinal trim
 addpath('../chap5');
-Va = 20;
+Va = 20; %20; %Va = 11.5;
 gamma = deg2rad(0);
 %Setup trim class with desired trim conditions
 trim = compute_long_trim(Va, gamma, mav, MAV);
@@ -81,7 +81,7 @@ while sim_time < SIM.end_time
     estimated_state = mav.true_state;  % uses true states in the control
     commands.p_command = p_command.square(sim_time);%square(sim_time);
     commands.q_command = q_command.sinusoid(sim_time); %q_command.square(sim_time); <-----------Changed as hook recommended
-    commands.gamma_command = gamma_command.sinusoid(sim_time); %square(sim_time); %<-------UNCOMMENTED, probably why my gamma was NOT changing...
+    commands.gamma_command = gamma_command.square(sim_time); %square(sim_time); %<-------UNCOMMENTED, probably why my gamma was NOT changing...
     commands.airspeed_command = Va_command;
     [delta, commanded_state] = ctrl.update(commands, estimated_state);
 
