@@ -24,8 +24,6 @@ classdef pid_control < handle
     methods
         %------constructor-----------
         function self = pid_control(kp, ki, kd, Ts, low_limit, up_limit)
-
-            sigma = 0.05; %just trying things 
             self.kp = kp;
             self.ki = ki;
             self.kd = kd;
@@ -33,10 +31,10 @@ classdef pid_control < handle
             self.low_limit = low_limit;
             self.up_limit = up_limit;
             self.integrator = 0;
-             self.error_delay_1 = 0;
-             self.error_dot_delay_1 = 0;
-             self.a1 = (2*sigma-Ts)/(2*sigma+Ts);
-             self.a2 = 2/(2*sigma+Ts);
+%             self.error_delay_1 = 0;
+%             self.error_dot_delay_1 = 0;
+%             self.a1 = (2*sigma-Ts)/(2*sigma+Ts);
+%             self.a2 = 2/(2*sigma+Ts);
             self.last_error = -9999;
         end
         %----------------------------

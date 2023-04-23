@@ -17,7 +17,7 @@ mav_view = mav_viewer();
 data_view = data_viewer();
 
 % initialize the video writer
-VIDEO = 0;  % 1 means write video, 0 means don't write video
+VIDEO = 1;  % 1 means write video, 0 means don't write video
 if VIDEO==1, video=video_writer('chap4_video.avi', SIM.ts_video); end
 
 % initialize elements of the architecture
@@ -39,7 +39,7 @@ while sim_time < SIM.end_time
 
     %-------physical system-------------
     current_wind = wind.update();
-    mav.update_state(delta, current_wind, MAV, "long");
+    mav.update_state(delta, current_wind, MAV);
     
     %-------update viewer-------------
     mav_view.update(mav.true_state);  % plot body of MAV

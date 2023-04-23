@@ -1,0 +1,10 @@
+tale kinematics from ch3 and put it in mav dynamics
+
+75 pq = pw
+
+put all the forces and moments names in 130. state vectors
+
+f_x_g= -MAV.g*MAV.gravity*sind(theta);
+
+phi, theta, 
+f_x_g= -MAV.g*MAV.gravity*sind(theta);

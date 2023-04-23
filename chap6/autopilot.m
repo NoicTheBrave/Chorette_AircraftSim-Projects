@@ -20,7 +20,6 @@ classdef autopilot < handle
         vertical_ap_state
         horizontal_ap_state
         trim_delta
-        %delta_e %GONNA TRY AND SEE IF THIS WORKS 
     end
     %--------------------------------
     methods
@@ -29,16 +28,14 @@ classdef autopilot < handle
              % load AP: control gains/parameters
             run('../parameters/control_parameters') 
             addpath('../chap6')
-            self.ts_control = ts_control;  %------------- I just put () on the end of this thing... 
-            
-            self.rollrate_aileron = 0;
-            self.rollangle_rollrate = 0;
-            self.courseangle_rollangle = 0;
-            self.sideslip_rudder = 0;
-            
+            self.ts_control = ts_control;
+            self.rollrate_aileron = pid_control(AP.p_kp, AP.p_ki, AP.p_kd, self.ts_control, -1, 1);
+            self.rollangle_rollrate = pid_control(AP.phi_kp, AP.phi_ki, AP.phi_kd, self.ts_control, deg2rad(-20), deg2rad(20));
+            self.courseangle_rollangle = pid_control(AP.chi_kp, AP.chi_ki, AP.chi_kd, self.ts_control, deg2rad(-40), deg2rad(40));
+            self.sideslip_rudder = pid_control(AP.beta_kp, AP.beta_ki, AP.beta_kd, self.ts_control, -1, 1);
             self.pitchrate_elevator = pid_control(AP.q_kp, AP.q_ki, AP.q_kd, self.ts_control, -1, 1);
-            self.gamma_pitchrate = pid_control(AP.gamma_kp, AP.gamma_ki, AP.gamma_kd, self.ts_control, rad2deg(-20), rad2deg(20));
-            self.alt_gamma = pid_control(AP.h_kp, AP.h_ki, AP.h_kd, self.ts_control, rad2deg(-10), rad2deg(20));%0; %0; %<-------------this is what we need to be playing with inorder to get the right movements 
+            self.gamma_pitchrate = pid_control(AP.gamma_kp, AP.gamma_ki, AP.gamma_kd, self.ts_control, deg2rad(-20), deg2rad(20));
+            self.alt_gamma = pid_control(AP.h_kp, AP.h_ki, AP.h_kd, self.ts_control, deg2rad(-10), deg2rad(20));
             self.Va_throttle = pid_control(AP.Va_kp, AP.Va_ki, AP.Va_kd, self.ts_control, 0, 1);
             addpath('../message_types'); 
             self.commanded_state = msg_state();
@@ -68,35 +65,30 @@ classdef autopilot < handle
             
             % lateral autopilot
             % longitudinal autopilot
-
-            
-
-            if(strcmp(self.horizontal_ap_state,'p')) %self.horizontal_ap_state == 'p')
+            if(strcmp(self.horizontal_ap_state,'p'))
                 p_c = cmd.p_command;
                 self.commanded_state.p = cmd.p_command;
                 self.commanded_state.phi = 0;
                 self.commanded_state.chi = 0;
-                delta_a = 0;
+                delta_a = self.rollrate_aileron.update(p_c, state.p);
           
-            elseif(strcmp(self.vertical_ap_state,'phi'))%elseif(self.horizontal_ap_state == 'phi')
+            elseif(strcmp(self.horizontal_ap_state,'phi'))
                 phi_c = cmd.phi_command;
                 self.commanded_state.phi = cmd.phi_command;
                 self.commanded_state.chi = 0;
-                p_c = 0;
+                p_c = self.rollangle_rollrate.update(phi_c, state.phi);
                 self.commanded_state.p = p_c;
-                delta_a = 0;
+                delta_a = self.rollrate_aileron.update(p_c, state.p);
                 
-            elseif(strcmp(self.horizontal_ap_state, 'chi')) %elseif(self.horizontal_ap_state == 'chi')
-                chi_c = cmd.altitude_command;
-                self.commanded_state.chi = cmd.chi_command;
-                phi_c =0;
+            elseif(strcmp(self.horizontal_ap_state,'chi'))
+                chi_c = cmd.course_command;
+                self.commanded_state.chi = cmd.course_command;
+                phi_c = self.courseangle_rollangle.update(chi_c, state.chi);
                 self.commanded_state.phi = phi_c;
-                p_c = 0;
+                p_c = self.rollangle_rollrate.update(phi_c, state.phi);
                 self.commanded_state.p = p_c;
-                delta_a =0;
-           %--------Disabled due to an error... for the command ment for
-           %error handling... (nice one!)
-
+                delta_a = self.rollrate_aileron.update(p_c, state.p);
+                
             else
                 ME = MException('Incorrect State', ...
                     'State %s not included in the possible lateral autopilot modes',self.vertical_ap_state);
@@ -104,38 +96,35 @@ classdef autopilot < handle
             end
 
             self.commanded_state.beta = 0;
-            delta_r = 0;
+            delta_r = self.sideslip_rudder.update(0, state.beta);
 
             % longitudinal autopilot
-            if(self.vertical_ap_state == 'q')
+            if(strcmp(self.vertical_ap_state,'q'))
                 q_c = cmd.q_command;
                 self.commanded_state.q = cmd.q_command;
                 self.commanded_state.gamma = 0;
                 self.commanded_state.h = 0;
                 delta_e = self.pitchrate_elevator.update(q_c, state.q);
-                %delta_e_add = self.pitchrate_elevator.update_with_no_rate(p_c, state.p); %--------------------------
-                %delta_e = self.saturate(self.trim_delta(1) + delta_e_add, -1, 1);%%--------------------------
+                %delta_e_add = self.pitchrate_elevator.update_with_no_rate(p_c, state.p);
+                %delta_e = self.saturate(self.trim_delta(1) + delta_e_add, -1, 1);
           
-            elseif(strcmp(self.vertical_ap_state,'gamma'))%self.vertical_ap_state == 'gamma')
+            elseif(strcmp(self.vertical_ap_state,'gamma'))
                 gamma_c = cmd.gamma_command;
                 self.commanded_state.gamma = cmd.gamma_command;
                 self.commanded_state.h = 0;
-                q_c = self.gamma_pitchrate.update(gamma_c, state.gamma);%q_c = self.pitchrate_elevator.update(gamma_c, state.gamma);
+                q_c = self.pitchrate_elevator.update(gamma_c, state.gamma);
                 self.commanded_state.q = q_c;
                 delta_e = self.pitchrate_elevator.update(q_c, state.q);
                 
-            elseif(strcmp(self.vertical_ap_state,'alt'))%self.vertical_ap_state == 'alt')
+            elseif(strcmp(self.vertical_ap_state,'alt'))
                 h_c = cmd.altitude_command;
                 self.commanded_state.h = cmd.altitude_command;
-                gamma_c =0;
+                gamma_c = self.alt_gamma.update(h_c, state.h);
                 self.commanded_state.gamma = gamma_c;
-                q_c = 0;
+                q_c = self.gamma_pitchrate.update(gamma_c, state.gamma);
                 self.commanded_state.q = q_c;
-                delta_e =0;
+                delta_e = self.pitchrate_elevator.update(q_c, state.q);
                 
-            %--------Disabled due to an error... for the command ment for
-           %error handling... (nice one!)
-
             else
                 ME = MException('Incorrect State', ...
                     'State %s not included in the possible longitudinal autopilot modes',self.vertical_ap_state);

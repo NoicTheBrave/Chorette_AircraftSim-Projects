@@ -4,7 +4,6 @@
 %     - Update history:  
 %         2/5/2019 - RWB
 %         2/27/2023 - LRH Heavily Modified for longitudinal only
-        %3/1/2023 - NIC Doesnt know what the hell he is doing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear
 clc
@@ -31,17 +30,15 @@ mav = mav_dynamics(SIM.ts_simulation, MAV);
 
 % compute longitudinal trim
 addpath('../chap5');
-
-Va = 20;  %TODO set your desired Va speed
-gamma = 0; %deg2rad(12);  %TODO set your desired gamma speed in radians
-
+Va = 20;
+gamma = deg2rad(12);
 %Setup trim class with desired trim conditions
 trim = compute_long_trim(Va, gamma, mav, MAV);
 
 %Guess input conditions
-delta_e_0 = -0.2;  %TODO guess your trimmed delta_e - Elevator - (small neg) (between -1 -> 0 (for this project)
-delta_t_0 = 0.7;   %TODO guess your trimmed delta_t - Thrust - (between 0 & 1, mucho FORCE <3) 
-alpha_0 = deg2rad(2.0); %0; %TODO guess your trimmed alpha - Alpha - pitch angle (pos? :P ) 
+delta_e_0 = -0.2;  %-.2
+delta_t_0 = .7;   %.5
+alpha_0 = deg2rad(2.0);
 
 x = [alpha_0, delta_e_0, delta_t_0];
 
@@ -50,12 +47,12 @@ A = [];
 b = [];
 Aeq = [];
 beq = [];
-lb = [deg2rad(-5), -1, 0]; %lower bound
-ub = [deg2rad(20), 1, 1]; % upper bound 
+lb = [deg2rad(-5), -1, 0];
+ub = [deg2rad(20), 1, 1];
 x0 = [alpha_0, delta_e_0, delta_t_0];
-x = fmincon(@trim.compute_long_forces, x0, A, b, Aeq, beq, lb, ub); % literally magic <3 
+x = fmincon(@trim.compute_long_forces, x0, A, b, Aeq, beq, lb, ub);
 
-out = trim.compute_long_forces(x)
+out = trim.compute_long_forces(x);
 mav.set_longitudinal(Va, gamma, x(1));
 delta = [x(2), x(3), 0, 0];
 

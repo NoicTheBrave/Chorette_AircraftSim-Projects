@@ -5,35 +5,33 @@
 %     - Beard & McLain, PUP, 2012
 %     - Update history:  
 %         2/12/2019 - RWB
+%         3/1/2023 - LRH Added command messages
 classdef msg_autopilot
    %--------------------------------
     properties
-        airspeed_command
-
-
+        %Lateral commands beta_command = 0 implicitly
+        p_command
+        phi_command
         course_command
-        
+        %Longitudinal
+        q_command
+        gamma_command
         altitude_command
-        
-        gamma_command % Added - Ch 6
-        q_command % Added - Ch 6
-        p_command % Added - Ch 6
-
-        phi_feedforward
+        airspeed_command
     end
     %--------------------------------
     methods
         %------constructor-----------
         function self = msg_autopilot()
-            self.airspeed_command = 0;
+            
+            self.p_command = 0;
+            self.phi_command = 0;
             self.course_command = 0;
+            
+            self.q_command = 0;
+            self.gamma_command = 0;
             self.altitude_command = 0;
-            self.phi_feedforward = 0;
-
-            self.gamma_command = 0; % Added - Ch 6
-            self.q_command = 0; % Added - Ch 6
-            self.p_command = 0; % Added - Ch 6
-
+            self.airspeed_command = 0;
         end
     end
 end
