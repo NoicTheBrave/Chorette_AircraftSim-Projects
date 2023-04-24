@@ -124,9 +124,9 @@ classdef mav_dynamics < handle
 
             self.sensors.accel_x = fx/MAV.mass  + g*sin(theta) + normrnd(0,SENSOR.accel_sigma);
             self.sensors.accel_y = fy/MAV.mass - g*cos(theta)*sin(phi) + normrnd(0,SENSOR.accel_sigma);           
-            self.sensors.accel_z = fz/MAV.mass - g*cos(theta)*sin(phi) + normrnd(0,SENSOR.accel_sigma);
+            self.sensors.accel_z = fz/MAV.mass - g*cos(theta)*cos(phi) + normrnd(0,SENSOR.accel_sigma);
             
-            self.sensors.static_pressure =  (-1) * rho * g * (-pd) + P + normrnd(0,SENSOR.static_pres_sigma);
+            self.sensors.static_pressure =  (-1) * rho * g * (-pd)  + normrnd(0,SENSOR.static_pres_sigma);
             self.sensors.diff_pressure = (0.5) * rho * Vair^2 + normrnd(0,SENSOR.diff_pres_sigma);
             
             if self.t_gps >= SENSOR.ts_gps %bigger than refresh rate, UH OH! 
