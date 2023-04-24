@@ -20,6 +20,7 @@ classdef mav_dynamics < handle
         gps_eta_e
         gps_eta_h
         t_gps
+        %rho % ---new! <3 
 
         vn %initialize as 0, which is what we need <3 
         ve
@@ -103,7 +104,8 @@ classdef mav_dynamics < handle
             
             P = Po*(To/(To+Lo*h_asl))^( (g * M) / (R * Lo) ) ; 
 
-            rho = M*P / (R * T);
+            self.sensors.rho = M*P / (R * T);
+            rho = self.sensors.rho;
 
             
 
@@ -120,7 +122,7 @@ classdef mav_dynamics < handle
             % Return value of sensors on MAV: gyros, accels, static_pressure, dynamic_pressure, GPS
             self.sensors.gyro_x = p + normrnd(0,SENSOR.gyro_sigma); 
             self.sensors.gyro_y = q + normrnd(0,SENSOR.gyro_sigma); 
-            self.sensors.gyro_z = q + normrnd(0,SENSOR.gyro_sigma); 
+            self.sensors.gyro_z = r + normrnd(0,SENSOR.gyro_sigma); 
 
             self.sensors.accel_x = fx/MAV.mass  + g*sin(theta) + normrnd(0,SENSOR.accel_sigma);
             self.sensors.accel_y = fy/MAV.mass - g*cos(theta)*sin(phi) + normrnd(0,SENSOR.accel_sigma);           
@@ -144,7 +146,7 @@ classdef mav_dynamics < handle
 
                 %Page 150 for some constants if we need em in the future
                 %for GPS error shenanaginss 
-                wn = 2.1;  
+                wn = 0.5;  %was 2.1
                 we = wn; %literally the same numbers for nwo. W was used cause. WEEE! So much fun 
 
                 % We need these for Vg 

@@ -31,10 +31,10 @@ classdef observer < handle
             self.lpf_gyro_z = alpha_filter(0.5);
             self.lpf_accel_x = alpha_filter(0.5);
             self.lpf_accel_y = alpha_filter(0.5);
-            self.lpf_accel_z = alpha_filter(0.5);
-            self.lpf_static = alpha_filter(0.5);
-            self.lpf_diff = alpha_filter(0.5);
-            self.attitude_ekf = ekf_attitude();
+            self.lpf_accel_z = alpha_filter(0.5); %some of these were like 0.99, the lower ones, not sure how many... 
+            self.lpf_static = alpha_filter(0.8); %0.5
+            self.lpf_diff = alpha_filter(0.9);% 0.9 %was -.5
+            self.attitude_ekf = ekf_attitude();% 
             self.position_ekf = ekf_position();
 %             % load AP: control gains/parameters
 %             run('../parameters/control_parameters') 
@@ -44,13 +44,18 @@ classdef observer < handle
         %------methods-----------
         function estimated_state = update(self, measurements, MAV)
             % estimates for p, q, r are low pass filter of gyro minus bias estimate
-            self.estimated_state.p = 
-            self.estimated_state.q =
-            self.estimated_state.r = 
+            self.estimated_state.p = self.lpf_gyro_x.update(measurements.gyro_x) ;%- SENSOR.gyro_x_bias;
+            self.estimated_state.q = self.lpf_gyro_y.update(measurements.gyro_y) ;%- SENSOR.gyro_y_bias;
+            self.estimated_state.r = self.lpf_gyro_z.update(measurements.gyro_z) ;%- SENSOR.gyro_z_bias;
 
             % invert sensor model to get altitude and airspeed
-            self.estimated_state.h = 
-            self.estimated_state.Va = 
+            self.estimated_state.h = self.lpf_static.update(measurements.static_pressure) / (measurements.rho * -9.81);
+            self.estimated_state.Va = sqrt((2/measurements.rho)*self.lpf_diff.update(measurements.diff_pressure)); 
+
+            self.estimated_state.theta = asin(self.lpf_accel_x.update(measurements.accel_x)/9.81); 
+            self.estimated_state.phi = atan(self.lpf_accel_y.update(measurements.accel_y)/self.lpf_accel_z.update(measurements.accel_z)); 
+
+
 
             % estimate phi and theta with simple ekf
             self.estimated_state = self.attitude_ekf.update(self.estimated_state, measurements);

@@ -19,8 +19,14 @@ classdef alpha_filter < handle
         end
         %------methods-----------
         function y = update(self, u)
-            self.y = 
-            y = self.y;
+            
+            if(self.y == 0) %compensates for matlab's goofyness
+                self.y = u; 
+                y = self.y; 
+            else
+                self.y = self.alpha*self.y + (1-self.alpha)*u;% 0.5 ; %this is a guess 
+                y = self.y;
+            end %end of IF-ELSE 
         end
     end
 end

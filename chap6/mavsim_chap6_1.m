@@ -102,7 +102,7 @@ while sim_time < SIM.end_time
                      mav.true_state,...  % estimated states
                      mav.true_state,...  % commmanded states
                      SIM.ts_simulation);
-    mav_view.set_view(90, 0);
+    %mav_view.set_view(90, 0);
     ctrl_viewer.update(mav.true_state, commanded_state, delta, SIM.ts_simulation);
     if VIDEO==1
         video.update(sim_time);  

@@ -21,6 +21,7 @@ classdef msg_sensors
         gps_h
         gps_Vg
         gps_course
+        rho %--NEW! 
     end
     %--------------------------------
     methods
@@ -38,7 +39,8 @@ classdef msg_sensors
             self.gps_e = 0;
             self.gps_h = 0;
             self.gps_Vg = 0;
-            self.gps_course = 0;      
+            self.gps_course = 0; 
+            self.rho = 0; 
         end
     end
 end

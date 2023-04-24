@@ -28,7 +28,8 @@ VIDEO = 0;  % 1 means write video, 0 means don't write video
 if VIDEO==1, video=video_writer('chap7_video.avi', SIM.ts_video); end
 
 % initialize elements of the architecture
-addpath('../chap4'); wind = wind_simulation(SIM.ts_simulation);
+addpath('../chap4'); 
+wind = wind_simulation(SIM.ts_simulation);
 
 addpath('../chap5'); 
 addpath('../chap6'); ctrl = autopilot(SIM.ts_simulation);
@@ -38,9 +39,12 @@ addpath('../message_types'); commands = msg_autopilot();
 addpath('../tools');
 
 % arguments to signals are amplitude, frequency, start_time, dc_offset
-Va_command = signals(3, 0.01, 2, 25);
-h_command = signals(10, 0.02, 0, 100);
-chi_command = signals(45*pi/180, 0.015, 5, 180*pi/180);
+%Va_command = 20; %Va_command = signals(3, 0.01, 2, 25);
+%h_command = signals(10, 0.02, 0, 100);
+%altitude_command = signals(10, pi/10, 1, 100);
+
+%chi_command = signals(45*pi/180, 0.015, 5, 180*pi/180);
+%course_command = signals(deg2rad(50), pi/10, 1, 0);
 
 % initialize the simulation time
 sim_time = SIM.start_time;
@@ -99,8 +103,8 @@ while sim_time < SIM.end_time
     measurements = mav.update_sensors(MAV, SENSOR); %<------------ why? :( 
     estimated_state = mav.true_state;  % uses true states in the control
     commands.airspeed_command = Va_command;
-    commands.course_command = chi_command.square(sim_time);
-    commands.altitude_command = h_command.square(sim_time);
+    commands.course_command = course_command.square(sim_time); %chi_command.square(sim_time);
+    commands.altitude_command = altitude_command.square(sim_time); %h_command.square(sim_time);
     [delta, commanded_state] = ctrl.update(commands, estimated_state);
     
     %-------physical system-------------
@@ -110,8 +114,8 @@ while sim_time < SIM.end_time
     %-------update viewer-------------
     mav_view.update(mav.true_state);       % plot body of MAV
     data_view.update(mav.true_state,...    % true states
-                     estimated_state,...       % estimated states
-                     commanded_state,...       % commmanded states
+                     mav.true_state,... %estimated_state,...       % estimated states
+                     mav.true_state,... %; commanded_state,...       % commmanded states
                      SIM.ts_simulation); 
     if VIDEO==1, video.update(sim_time); end
 
