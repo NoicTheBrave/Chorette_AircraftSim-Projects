@@ -16,6 +16,11 @@ classdef msg_path
         orbit_radius
         orbit_direction
         flag_path_changed
+
+        flag %---------testing out something new... 
+        altitude %----------yet another thing I am testing out idk 
+       % phi_feedforward %----------another one for chapyter 10 
+
     end
     %--------------------------------
     methods

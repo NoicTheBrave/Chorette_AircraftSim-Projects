@@ -18,6 +18,8 @@ classdef msg_autopilot
         gamma_command
         altitude_command
         airspeed_command
+
+        phi_feedforward %--------trying something for chapter 10 
     end
     %--------------------------------
     methods
