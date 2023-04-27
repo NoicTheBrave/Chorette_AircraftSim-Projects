@@ -35,9 +35,9 @@ addpath('../chap10'); path_follow = path_follower();
 addpath('../message_types'); path = msg_path();%addpath('../message_types'); path = msg_path();
 addpath('../tools'); %--------------------------I CHOSE TO ADD THIS IN HOPES THINGS WILL STOP BREAKING AS MUCH 
 
-path.flag = 'line';
+%path.flag = 'line';
 
-%path.flag = 'orbit'; %--------------this was origionally enabled 
+path.flag = 'orbit'; %--------------this was origionally enabled 
 
 %path.type = 'orbit'; %--testing out something new... 
 if isequal(path.flag, 'line')
